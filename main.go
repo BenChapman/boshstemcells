@@ -11,9 +11,7 @@ import (
 
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "https://bosh.io/", 301)
-	})
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 	r.HandleFunc("/{iaas}", handleRequest)
 	r.HandleFunc("/{iaas}/{version}", handleRequest)
 
@@ -39,11 +37,11 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch iaasString {
-	case "aws":
+	case "aws", "amazon":
 		iaas = "aws-xen-hvm"
 	case "azure":
 		iaas = "azure-hyperv"
-	case "gcp":
+	case "gcp", "google":
 		iaas = "google-kvm"
 	case "openstack":
 		iaas = "openstack-kvm"
@@ -53,7 +51,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		iaas = "vsphere-esxi"
 	case "vcloud":
 		iaas = "vcloud-esxi"
-	case "lite":
+	case "lite", "boshlite":
 		iaas = "warden-boshlite"
 	default:
 		w.WriteHeader(http.StatusNotFound)
