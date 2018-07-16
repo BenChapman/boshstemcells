@@ -35,5 +35,16 @@
         </div>
       </div>
     </div>
+  <script type="text/javascript">
+    var codeElements = document.querySelectorAll('code')
+    Array.prototype.forEach.call(codeElements, function(codeElement) {
+      codeElement.addEventListener('click', function(e) {
+        var range = document.createRange();
+        range.selectNode(codeElement);
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(range);
+      })
+    })
+  </script>
   </body>
 </html>
