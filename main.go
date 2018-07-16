@@ -11,9 +11,9 @@ import (
 
 func main() {
 	r := mux.NewRouter()
-	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 	r.HandleFunc("/{iaas}", handleRequest)
 	r.HandleFunc("/{iaas}/{version}", handleRequest)
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 
 	err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), r)
 	if err != nil {
