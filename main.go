@@ -42,9 +42,11 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	switch iaasString {
 	case "auto":
 		xff := r.Header.Get("X-Forwarded-For")
-		source, err := autodetectSource(net.ParseIP(xff))
+		splitXff := strings.Split(xff, ", ")
+		fmt.Printf("%#v\n", splitXff)
+		source, err := autodetectSource(net.ParseIP(splitXff[0]))
 		if err != nil || source == "" {
-			w.WriteHeader(http.StatusInternalServerError)
+			w.WriteHeader(http.StatusNotFound)
 			w.Write([]byte("could not autodetect IaaS"))
 			return
 		}
