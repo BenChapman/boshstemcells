@@ -1,0 +1,5 @@
+---
+applications:
+  - name: boshstemcells
+    env:
+      GOVERSION: go1.10
