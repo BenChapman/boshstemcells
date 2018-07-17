@@ -91,9 +91,11 @@ var _ = Describe("BoshStemcells.com", func() {
 		Expect(response.Header.Get("Location")).To(Equal(fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-%s-go_agent", "aws-xen-hvm", boshUrlPath)))
 	},
 		Entry("trusty", "/trusty", "ubuntu-trusty"),
+		Entry("trusty shortcut", "/t", "ubuntu-trusty"),
 		Entry("ubuntu-trusty", "/ubuntu-trusty", "ubuntu-trusty"),
 		Entry("ubuntutrusty", "/ubuntutrusty", "ubuntu-trusty"),
 		Entry("xenial", "/xenial", "ubuntu-xenial"),
+		Entry("xenial shortcut", "/x", "ubuntu-xenial"),
 		Entry("ubuntu-xenial", "/ubuntu-xenial", "ubuntu-xenial"),
 		Entry("ubuntuxenial", "/ubuntuxenial", "ubuntu-xenial"),
 		Entry("ubuntu", "/ubuntu", "ubuntu-xenial"),
