@@ -44,3 +44,4 @@ jobs:
     params:
       manifest: git-bosh-stemcells/manifest.yml
       path: git-bosh-stemcells/
+      current_app_name: boshstemcells

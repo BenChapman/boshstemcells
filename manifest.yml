@@ -1,6 +1,14 @@
 ---
 applications:
   - name: boshstemcells
+    memory: 256M
+    instances: 2
     env:
       GOVERSION: go1.10
       GOPACKAGENAME: github.com/benchapman/boshstemcells
+    routes:
+    - route: boshstemcells.cfapps.io
+    - route: boshstemcells.com
+    - route: www.boshstemcells.com
+    - route: boshstemcell.com
+    - route: www.boshstemcell.com
