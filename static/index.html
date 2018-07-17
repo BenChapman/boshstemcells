@@ -9,9 +9,9 @@
       <h1>BoshStemcells.com</h1>
       <div class="row">
         <div class="col-sm-12">
-          <p>You can use the following URL structure to get the latest BOSH stemcell for your IaaS:<br>
+          <p>You can use the following URL structure to get the latest Ubuntu Xenial BOSH stemcell for your IaaS:<br>
             <code>https://boshstemcells.com/[iaas]</code></p>
-          <p>If you need a specific version or stemcell line you can just append that to the end of the URL:<br>
+          <p>If you need a specific version or stemcell line (e.g. <code>trusty</code> or <code>3468.54</code>) you can just append that to the end of the URL:<br>
             <code>https://boshstemcells.com/[iaas]/[versionOrStemcellLine]</code></p>
           <p>If you need a specific stemcell line with a specific version you can also append that to the end of the URL:<br>
             <code>https://boshstemcells.com/[iaas]/[stemcellLine]/[version]</code></p>
@@ -26,6 +26,8 @@
             <tbody>
               <tr><td>Autodetect (for AWS, Azure &amp; GCP)</td><td><code>bosh upload-stemcell https://boshstemcells.com/auto</code></td></tr>
               <tr><td>Google GCP</td><td><code>bosh upload-stemcell https://boshstemcells.com/google</code></td></tr>
+              <tr><td>Google GCP Trusty</td><td><code>bosh upload-stemcell https://boshstemcells.com/google/trusty</code></td></tr>
+              <tr><td>Google GCP Trusty 3586.26</td><td><code>bosh upload-stemcell https://boshstemcells.com/google/trusty/3586.26</code></td></tr>
               <tr><td>Amazon AWS</td><td><code>bosh upload-stemcell https://boshstemcells.com/amazon</code></td></tr>
               <tr><td>VMWare VSphere</td><td><code>bosh upload-stemcell https://boshstemcells.com/vsphere</code></td></tr>
               <tr><td>Openstack</td><td><code>bosh upload-stemcell https://boshstemcells.com/openstack</code></td></tr>
