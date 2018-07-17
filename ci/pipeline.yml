@@ -16,6 +16,7 @@ resources:
 
 jobs:
 - name: bosh-stemcells
+  serial: true
   plan:
   - get: git-bosh-stemcells
     trigger: true
