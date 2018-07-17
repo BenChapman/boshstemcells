@@ -134,5 +134,8 @@ func isAzureAddress(ipAddress net.IP) (bool, error) {
 
 	jsonoutput := map[string]interface{}{}
 	json.NewDecoder(r.Body).Decode(&jsonoutput)
+	if jsonoutput["cloud"] == nil {
+		return false, nil
+	}
 	return jsonoutput["cloud"].(string) == "Azure", nil
 }
