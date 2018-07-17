@@ -76,6 +76,7 @@ var _ = Describe("BoshStemcells.com", func() {
 		Expect(err).ToNot(HaveOccurred())
 		responseBody, err := ioutil.ReadAll(response.Body)
 		Expect(err).ToNot(HaveOccurred())
+		Expect(response.StatusCode).To(Equal(http.StatusNotFound))
 		Expect(string(responseBody)).To(Equal("could not autodetect IaaS"))
 	})
 })
