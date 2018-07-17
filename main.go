@@ -18,7 +18,7 @@ func main() {
 	r := mux.NewRouter()
 	r.Handle("/bootstrap.min.css", http.FileServer(http.Dir("./static/")))
 	r.HandleFunc("/{iaas}", handleRequest)
-	r.HandleFunc("/{iaas}/{version}", handleRequest)
+	r.HandleFunc("/{iaas}/{versionOrLine}", handleRequest)
 	r.Handle("/", http.FileServer(http.Dir("./static/")))
 
 	err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), r)
@@ -30,6 +30,8 @@ func main() {
 func handleRequest(w http.ResponseWriter, r *http.Request) {
 	var iaas, version string
 
+	var line = "ubuntu-xenial"
+
 	vars := mux.Vars(r)
 	iaasString, ok := vars["iaas"]
 	if !ok {
@@ -37,11 +39,14 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	versionString, ok := vars["version"]
+	versionString, ok := vars["versionOrLine"]
 	if ok {
-		version = fmt.Sprintf("?v=%s", versionString)
+		if ok, lineVar := isLineVariable(vars["versionOrLine"]); ok {
+			line = lineVar
+		} else {
+			version = fmt.Sprintf("?v=%s", versionString)
+		}
 	}
-
 	if iaasString == "auto" {
 		xff := r.Header.Get("X-Forwarded-For")
 		splitXff := strings.Split(xff, ", ")
@@ -76,7 +81,18 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-ubuntu-xenial-go_agent%s", iaas, version), 301)
+	http.Redirect(w, r, fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-%s-go_agent%s", iaas, line, version), 301)
+}
+
+func isLineVariable(line string) (bool, string) {
+	switch line {
+	case "trusty":
+		return true, "ubuntu-trusty"
+	case "xenial":
+		return true, "ubuntu-xenial"
+	default:
+		return false, ""
+	}
 }
 
 func autodetectSource(ipAddress net.IP) (string, error) {

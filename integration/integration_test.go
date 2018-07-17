@@ -79,4 +79,15 @@ var _ = Describe("BoshStemcells.com", func() {
 		Expect(response.StatusCode).To(Equal(http.StatusNotFound))
 		Expect(string(responseBody)).To(Equal("could not autodetect IaaS"))
 	})
+
+	It("can accept a stemcell line as the second path variable", func() {
+		client := &http.Client{
+			CheckRedirect: func(r *http.Request, ra []*http.Request) error { return http.ErrUseLastResponse },
+		}
+
+		response, err := client.Get(fmt.Sprintf("http://localhost:%d/aws/trusty", serverPort))
+		Expect(err).ToNot(HaveOccurred())
+		Expect(response.StatusCode).To(Equal(301))
+		Expect(response.Header.Get("Location")).To(Equal(fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-ubuntu-trusty-go_agent", "aws-xen-hvm")))
+	})
 })
