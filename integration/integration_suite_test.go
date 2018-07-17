@@ -2,6 +2,7 @@ package integration_test
 
 import (
 	"fmt"
+	"net"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -28,16 +29,23 @@ func TestIntegration(t *testing.T) {
 		)
 
 		pathToBin, err = gexec.Build("github.com/benchapman/boshstemcells")
-		Ω(err).ShouldNot(HaveOccurred())
+		Expect(err).ToNot(HaveOccurred())
+
+		listener, err := net.Listen("tcp", ":0")
+		if err != nil {
+			panic(err)
+		}
+
+		serverPort = listener.Addr().(*net.TCPAddr).Port
+
+		listener.Close()
 
 		cmd := exec.Command(pathToBin)
 		cmd.Env = os.Environ()
-		cmd.Env = append(cmd.Env, fmt.Sprintf("PORT=%d", 3313))
+		cmd.Env = append(cmd.Env, fmt.Sprintf("PORT=%d", serverPort))
 		pwd, err := os.Getwd()
 		Expect(err).ToNot(HaveOccurred())
 		cmd.Dir = filepath.Join(pwd, "..")
-
-		serverPort = 3313
 
 		session, err = gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
