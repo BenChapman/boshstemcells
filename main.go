@@ -19,6 +19,7 @@ func main() {
 	r.Handle("/bootstrap.min.css", http.FileServer(http.Dir("./static/")))
 	r.HandleFunc("/{iaas}", handleRequest)
 	r.HandleFunc("/{iaas}/{versionOrLine}", handleRequest)
+	r.HandleFunc("/{iaas}/{versionOrLine}/{version}", handleRequest)
 	r.Handle("/", http.FileServer(http.Dir("./static/")))
 
 	err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), r)
@@ -39,14 +40,20 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	versionString, ok := vars["versionOrLine"]
+	versionOrLineString, ok := vars["versionOrLine"]
 	if ok {
 		if ok, lineVar := isLineVariable(vars["versionOrLine"]); ok {
 			line = lineVar
 		} else {
-			version = fmt.Sprintf("?v=%s", versionString)
+			version = fmt.Sprintf("?v=%s", versionOrLineString)
 		}
 	}
+
+	versionString, ok := vars["version"]
+	if ok {
+		version = fmt.Sprintf("?v=%s", versionString)
+	}
+
 	if iaasString == "auto" {
 		xff := r.Header.Get("X-Forwarded-For")
 		splitXff := strings.Split(xff, ", ")
