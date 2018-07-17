@@ -76,7 +76,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-ubuntu-trusty-go_agent%s", iaas, version), 301)
+	http.Redirect(w, r, fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-ubuntu-xenial-go_agent%s", iaas, version), 301)
 }
 
 func autodetectSource(ipAddress net.IP) (string, error) {

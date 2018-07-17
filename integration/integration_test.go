@@ -31,7 +31,7 @@ var _ = Describe("BoshStemcells.com", func() {
 		response, err := client.Get(fmt.Sprintf("http://localhost:%d%s", serverPort, path))
 		Expect(err).ToNot(HaveOccurred())
 		Expect(response.StatusCode).To(Equal(301))
-		Expect(response.Header.Get("Location")).To(Equal(fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-ubuntu-trusty-go_agent", boshUrlPath)))
+		Expect(response.Header.Get("Location")).To(Equal(fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-ubuntu-xenial-go_agent", boshUrlPath)))
 	},
 		Entry("gcp", "/gcp", "google-kvm"),
 		Entry("vsphere", "/vsphere", "vsphere-esxi"),
@@ -51,7 +51,7 @@ var _ = Describe("BoshStemcells.com", func() {
 		response, err := client.Get(fmt.Sprintf("http://localhost:%d/gcp/1234.56", serverPort))
 		Expect(err).ToNot(HaveOccurred())
 		Expect(response.StatusCode).To(Equal(301))
-		Expect(response.Header.Get("Location")).To(Equal("https://bosh.io/d/stemcells/bosh-google-kvm-ubuntu-trusty-go_agent?v=1234.56"))
+		Expect(response.Header.Get("Location")).To(Equal("https://bosh.io/d/stemcells/bosh-google-kvm-ubuntu-xenial-go_agent?v=1234.56"))
 	})
 
 	DescribeTable("Autodetects", func(ipAddress, boshUrlPath string) {
@@ -64,7 +64,7 @@ var _ = Describe("BoshStemcells.com", func() {
 		response, err := client.Do(req)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(response.StatusCode).To(Equal(301))
-		Expect(response.Header.Get("Location")).To(Equal(fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-ubuntu-trusty-go_agent", boshUrlPath)))
+		Expect(response.Header.Get("Location")).To(Equal(fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-ubuntu-xenial-go_agent", boshUrlPath)))
 	},
 		Entry("gcp", "35.203.192.88", "google-kvm"),
 		Entry("aws", "52.210.132.254", "aws-xen-hvm"),
