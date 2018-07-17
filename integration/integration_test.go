@@ -80,16 +80,32 @@ var _ = Describe("BoshStemcells.com", func() {
 		Expect(string(responseBody)).To(Equal("could not autodetect IaaS"))
 	})
 
-	It("can accept a stemcell line as the second path variable", func() {
+	DescribeTable("can accept a stemcell line as the second path variable", func(path, boshUrlPath string) {
 		client := &http.Client{
 			CheckRedirect: func(r *http.Request, ra []*http.Request) error { return http.ErrUseLastResponse },
 		}
 
-		response, err := client.Get(fmt.Sprintf("http://localhost:%d/aws/trusty", serverPort))
+		response, err := client.Get(fmt.Sprintf("http://localhost:%d/aws%s", serverPort, path))
 		Expect(err).ToNot(HaveOccurred())
 		Expect(response.StatusCode).To(Equal(301))
-		Expect(response.Header.Get("Location")).To(Equal(fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-ubuntu-trusty-go_agent", "aws-xen-hvm")))
-	})
+		Expect(response.Header.Get("Location")).To(Equal(fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-%s-go_agent", "aws-xen-hvm", boshUrlPath)))
+	},
+		Entry("trusty", "/trusty", "ubuntu-trusty"),
+		Entry("ubuntu-trusty", "/ubuntu-trusty", "ubuntu-trusty"),
+		Entry("ubuntutrusty", "/ubuntutrusty", "ubuntu-trusty"),
+		Entry("xenial", "/xenial", "ubuntu-xenial"),
+		Entry("ubuntu-xenial", "/ubuntu-xenial", "ubuntu-xenial"),
+		Entry("ubuntuxenial", "/ubuntuxenial", "ubuntu-xenial"),
+		Entry("ubuntu", "/ubuntu", "ubuntu-xenial"),
+		Entry("windows", "/windows", "windows2016"),
+		Entry("windows2016", "/windows2016", "windows2016"),
+		Entry("windows16", "/windows16", "windows2016"),
+		Entry("windows2012", "/windows2012", "windows2012R2"),
+		Entry("windows12", "/windows12", "windows2012R2"),
+		Entry("centos", "/centos", "centos-7"),
+		Entry("centos7", "/centos7", "centos-7"),
+		Entry("centos-7", "/centos-7", "centos-7"),
+	)
 
 	It("can accept a stemcell line as the second path variable and a version as the third path variable", func() {
 		client := &http.Client{

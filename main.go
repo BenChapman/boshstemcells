@@ -93,10 +93,16 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 
 func isLineVariable(line string) (bool, string) {
 	switch line {
-	case "trusty":
+	case "trusty", "ubuntu-trusty", "ubuntutrusty":
 		return true, "ubuntu-trusty"
-	case "xenial":
+	case "xenial", "ubuntu-xenial", "ubuntuxenial", "ubuntu":
 		return true, "ubuntu-xenial"
+	case "windows", "windows2016", "windows16":
+		return true, "windows2016"
+	case "windows2012", "windows12":
+		return true, "windows2012R2"
+	case "centos", "centos7", "centos-7":
+		return true, "centos-7"
 	default:
 		return false, ""
 	}
