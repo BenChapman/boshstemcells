@@ -3,3 +3,4 @@ applications:
   - name: boshstemcells
     env:
       GOVERSION: go1.10
+      GOPACKAGENAME: github.com/benchapman/boshstemcells

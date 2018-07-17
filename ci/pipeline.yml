@@ -12,7 +12,7 @@ resources:
     username: ((bosh-stemcells-cf.username))
     password: ((bosh-stemcells-cf.password))
     organization: bchapman-pivot
-    space: development
+    space: boshstemcells
 
 jobs:
 - name: bosh-stemcells
