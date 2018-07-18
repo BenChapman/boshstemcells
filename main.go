@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/zaccone/spf"
@@ -156,7 +157,12 @@ func isAWSAddress(ipAddress net.IP) (bool, error) {
 }
 
 func isAzureAddress(ipAddress net.IP) (bool, error) {
-	r, err := http.Get(fmt.Sprintf("http://www.azurespeed.com/api/region?ipOrUrl=%s", url.QueryEscape(ipAddress.String())))
+	timeout := time.Duration(time.Second)
+	httpClient := http.Client{
+		Timeout: timeout,
+	}
+
+	r, err := httpClient.Get(fmt.Sprintf("http://www.azurespeed.com/api/region?ipOrUrl=%s", url.QueryEscape(ipAddress.String())))
 	if err != nil {
 		return false, err
 	}
