@@ -54,6 +54,17 @@ var _ = Describe("BoshStemcells.com", func() {
 		Expect(response.Header.Get("Location")).To(Equal("https://bosh.io/d/stemcells/bosh-google-kvm-ubuntu-xenial-go_agent?v=1234.56"))
 	})
 
+	It("Redirects to latest", func() {
+		client := &http.Client{
+			CheckRedirect: func(r *http.Request, ra []*http.Request) error { return http.ErrUseLastResponse },
+		}
+
+		response, err := client.Get(fmt.Sprintf("http://localhost:%d/gcp/latest", serverPort))
+		Expect(err).ToNot(HaveOccurred())
+		Expect(response.StatusCode).To(Equal(301))
+		Expect(response.Header.Get("Location")).To(Equal("https://bosh.io/d/stemcells/bosh-google-kvm-ubuntu-xenial-go_agent"))
+	})
+
 	DescribeTable("Autodetects", func(ipAddress, boshUrlPath string) {
 		client := &http.Client{
 			CheckRedirect: func(r *http.Request, ra []*http.Request) error { return http.ErrUseLastResponse },
@@ -118,5 +129,16 @@ var _ = Describe("BoshStemcells.com", func() {
 		Expect(err).ToNot(HaveOccurred())
 		Expect(response.StatusCode).To(Equal(301))
 		Expect(response.Header.Get("Location")).To(Equal(fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-ubuntu-trusty-go_agent?v=1234.56", "aws-xen-hvm")))
+	})
+
+	It("can accept a stemcell line as the second path variable and latest as the third path variable", func() {
+		client := &http.Client{
+			CheckRedirect: func(r *http.Request, ra []*http.Request) error { return http.ErrUseLastResponse },
+		}
+
+		response, err := client.Get(fmt.Sprintf("http://localhost:%d/aws/trusty/latest", serverPort))
+		Expect(err).ToNot(HaveOccurred())
+		Expect(response.StatusCode).To(Equal(301))
+		Expect(response.Header.Get("Location")).To(Equal(fmt.Sprintf("https://bosh.io/d/stemcells/bosh-%s-ubuntu-trusty-go_agent", "aws-xen-hvm")))
 	})
 })

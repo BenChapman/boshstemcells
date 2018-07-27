@@ -46,13 +46,17 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		if ok, lineVar := isLineVariable(vars["versionOrLine"]); ok {
 			line = lineVar
 		} else {
-			version = fmt.Sprintf("?v=%s", versionOrLineString)
+			if versionOrLineString != "latest" {
+				version = fmt.Sprintf("?v=%s", versionOrLineString)
+			}
 		}
 	}
 
 	versionString, ok := vars["version"]
 	if ok {
-		version = fmt.Sprintf("?v=%s", versionString)
+		if versionString != "latest" {
+			version = fmt.Sprintf("?v=%s", versionString)
+		}
 	}
 
 	if iaasString == "auto" {
