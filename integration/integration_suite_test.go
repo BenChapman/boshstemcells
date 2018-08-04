@@ -7,7 +7,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"testing"
-	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -50,7 +49,10 @@ func TestIntegration(t *testing.T) {
 		session, err = gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 
-		time.Sleep(time.Second)
+		Eventually(func() error {
+			_, err := net.Dial("tcp", fmt.Sprintf("127.0.0.1:%d", serverPort))
+			return err
+		}, "10s").ShouldNot(HaveOccurred())
 	})
 
 	AfterSuite(func() {
