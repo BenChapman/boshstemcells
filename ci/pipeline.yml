@@ -3,7 +3,7 @@ resources:
 - name: git-bosh-stemcells
   type: git
   source:
-    uri: https://github.com/BenChapman/boshstemcells.git
+    uri: https://github.com/benchapman/boshstemcells.git
     branch: master
 - name: cf-bosh-stemcells
   type: cf
