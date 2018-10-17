@@ -34,11 +34,11 @@ jobs:
         - -ex
         - -c
         - |
-          mkdir -p src/github.com/benchapman
-          cp -r git-bosh-stemcells/ src/github.com/benchapman/boshstemcells/
+          mkdir -p src/code.benchapman.ie
+          cp -r git-bosh-stemcells/ src/code.benchapman.ie/boshstemcells/
           export GOPATH=$PWD
           export PATH=$PATH:$GOPATH/bin
-          cd src/github.com/benchapman/boshstemcells
+          cd src/code.benchapman.ie/boshstemcells
           go get github.com/onsi/ginkgo/ginkgo
           ginkgo ./integration/
       inputs:
