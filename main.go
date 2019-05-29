@@ -1,18 +1,12 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
-	"net"
 	"net/http"
-	"net/url"
 	"os"
-	"strings"
-	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/zaccone/spf"
 )
 
 func main() {
@@ -59,18 +53,6 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if iaasString == "auto" {
-		xff := r.Header.Get("X-Forwarded-For")
-		splitXff := strings.Split(xff, ", ")
-		source, err := autodetectSource(net.ParseIP(splitXff[0]))
-		if err != nil || source == "" {
-			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte("could not autodetect IaaS"))
-			return
-		}
-		iaasString = source
-	}
-
 	switch iaasString {
 	case "aws", "amazon":
 		iaas = "aws-xen-hvm"
@@ -111,70 +93,4 @@ func isLineVariable(line string) (bool, string) {
 	default:
 		return false, ""
 	}
-}
-
-func autodetectSource(ipAddress net.IP) (string, error) {
-	gcp, err := isGCPAddress(ipAddress)
-	if err != nil {
-		return "", err
-	}
-	if gcp {
-		return "gcp", nil
-	}
-
-	aws, err := isAWSAddress(ipAddress)
-	if err != nil {
-		return "", err
-	}
-	if aws {
-		return "aws", nil
-	}
-
-	azure, err := isAzureAddress(ipAddress)
-	if err != nil {
-		return "", err
-	}
-	if azure {
-		return "azure", nil
-	}
-
-	return "", nil
-}
-
-func isGCPAddress(ipAddress net.IP) (bool, error) {
-	r, _, err := spf.CheckHost(ipAddress, "_cloud-netblocks.googleusercontent.com", "")
-	if err != nil {
-		return false, err
-	}
-
-	return r == spf.Pass, nil
-}
-
-func isAWSAddress(ipAddress net.IP) (bool, error) {
-	names, err := net.LookupAddr(ipAddress.String())
-	if err != nil {
-		// will return an error if the address is not found
-		return false, nil
-	}
-
-	return strings.Contains(names[0], "amazonaws.com."), nil
-}
-
-func isAzureAddress(ipAddress net.IP) (bool, error) {
-	timeout := time.Duration(time.Second)
-	httpClient := http.Client{
-		Timeout: timeout,
-	}
-
-	r, err := httpClient.Get(fmt.Sprintf("http://www.azurespeed.com/api/region?ipOrUrl=%s", url.QueryEscape(ipAddress.String())))
-	if err != nil {
-		return false, err
-	}
-
-	jsonoutput := map[string]interface{}{}
-	json.NewDecoder(r.Body).Decode(&jsonoutput)
-	if jsonoutput["cloud"] == nil {
-		return false, nil
-	}
-	return jsonoutput["cloud"].(string) == "Azure", nil
 }

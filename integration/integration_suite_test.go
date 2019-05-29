@@ -27,7 +27,7 @@ func TestIntegration(t *testing.T) {
 			pathToBin string
 		)
 
-		pathToBin, err = gexec.Build("code.benchapman.ie/boshstemcells")
+		pathToBin, err = gexec.Build("code.katiechapman.ie/boshstemcells")
 		Expect(err).ToNot(HaveOccurred())
 
 		listener, err := net.Listen("tcp", ":0")
